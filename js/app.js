@@ -69,7 +69,7 @@
     alert(orientation)
 
     // iOS
-    if (orientation == "undefined"){
+    if (orientation === undefined){
       var rotation = window.orientation
       switch(rotation) {
         case 0:  
