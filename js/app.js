@@ -148,7 +148,7 @@
       // what adjustment we have to add to rotation to allow for current device orientation
       var adjustment = 0;
       if (defaultOrientation === "landscape") {
-        //adjustment -= 90;
+        adjustment -= 90;
       }
 
       if (typeof orientation !== "undefined") {
@@ -198,6 +198,9 @@
     } else {
       lockOrientationRequest(false);
     }
+
+    // Add
+    onHeadingChange();
   }
 
   function lockOrientationRequest(doLock) {
