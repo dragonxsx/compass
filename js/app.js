@@ -15,35 +15,16 @@
   // the outer part of the compass that rotates
   var rose = document.getElementById("rose");
 
-
-  // elements that ouput our position
-  var positionLat = document.getElementById("position-lat");
-  var positionLng = document.getElementById("position-lng");
-  var positionHng = document.getElementById("position-hng");
-
-
   // debug outputs
   var debugOrientation = document.getElementById("debug-orientation");
   var debugOrientationDefault = document.getElementById("debug-orientation-default");
 
-
-  // info popup elements, pus buttons that open popups
-  var popup = document.getElementById("popup");
-  var popupContents = document.getElementById("popup-contents");
-  var popupInners = document.querySelectorAll(".popup__inner");
-  var btnsPopup = document.querySelectorAll(".btn-popup");
-
-
   // buttons at the bottom of the screen
   var btnLockOrientation = document.getElementById("btn-lock-orientation");
-  var btnNightmode = document.getElementById("btn-nightmode");
-  var btnMap = document.getElementById("btn-map");
-  var btnInfo = document.getElementById("btn-info");
 
 
   // if we have shown the heading unavailable warning yet
   var warningHeadingShown = false;
-
 
   // switches keeping track of our current app state
   var isOrientationLockable = false;
@@ -191,10 +172,6 @@
 
       positionCurrent.hng = heading + adjustment;
 
-      var phase = positionCurrent.hng < 0 ? 360 + positionCurrent.hng : positionCurrent.hng;
-      positionHng.textContent = (360 - phase | 0) + "°";
-
-
       // apply rotation to compass rose
       if (typeof rose.style.transform !== "undefined") {
         rose.style.transform = "rotateZ(" + positionCurrent.hng + "deg)";
@@ -203,8 +180,6 @@
       }
     } else {
       // device can't show heading
-
-      positionHng.textContent = "n/a";
       showHeadingWarning();
     }
   }
@@ -225,48 +200,6 @@
       }
     } else {
       lockOrientationRequest(false);
-    }
-  }
-
-  function toggleOrientationLockable(lockable) {
-    isOrientationLockable = lockable;
-
-    if (isOrientationLockable) {
-      btnLockOrientation.classList.remove("btn--hide");
-
-      btnNightmode.classList.add("column-25");
-      btnNightmode.classList.remove("column-33");
-      btnMap.classList.add("column-25");
-      btnMap.classList.remove("column-33");
-      btnInfo.classList.add("column-25");
-      btnInfo.classList.remove("column-33");
-    } else {
-      btnLockOrientation.classList.add("btn--hide");
-
-      btnNightmode.classList.add("column-33");
-      btnNightmode.classList.remove("column-25");
-      btnMap.classList.add("column-33");
-      btnMap.classList.remove("column-25");
-      btnInfo.classList.add("column-33");
-      btnInfo.classList.remove("column-25");
-    }
-  }
-
-  function checkLockable() {
-    if (screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock(getBrowserOrientation()).then(function () {
-        toggleOrientationLockable(true);
-        browserUnlockOrientation();
-      }).catch(function (event) {
-        if (event.code === 18) { // The page needs to be fullscreen in order to call lockOrientation(), but is lockable
-          toggleOrientationLockable(true);
-          browserUnlockOrientation(); //needed as chrome was locking orientation (even if not in fullscreen, bug??)
-        } else {  // lockOrientation() is not available on this device (or other error)
-          toggleOrientationLockable(false);
-        }
-      });
-    } else {
-      toggleOrientationLockable(false);
     }
   }
 
@@ -293,74 +226,18 @@
     isOrientationLocked = locked;
   }
 
-  function toggleOrientationLock() {
-    if (isOrientationLockable) {
-      lockOrientationRequest(!isOrientationLocked);
-    }
-  }
-
   function locationUpdate(position) {
     positionCurrent.lat = position.coords.latitude;
     positionCurrent.lng = position.coords.longitude;
-
-    positionLat.textContent = decimalToSexagesimal(positionCurrent.lat, "lat");
-    positionLng.textContent = decimalToSexagesimal(positionCurrent.lng, "lng");
   }
 
   function locationUpdateFail(error) {
-    positionLat.textContent = "n/a";
-    positionLng.textContent = "n/a";
     console.log("location fail: ", error);
   }
 
-  function setNightmode(on) {
-
-    if (on) {
-      btnNightmode.classList.add("active");
-    } else {
-      btnNightmode.classList.remove("active");
-    }
-
-    window.setTimeout(function() {
-      if (on) {
-        document.documentElement.classList.add("nightmode");
-      } else {
-        document.documentElement.classList.remove("nightmode");
-      }
-    }, 1);
-
-
-    isNightMode = on;
-  }
-
-  function toggleNightmode() {
-    setNightmode(!isNightMode);
-  }
-
-  function openMap() {
-    window.open("https://www.google.com/maps/place/@" + positionCurrent.lat + "," + positionCurrent.lng + ",16z", "_blank");
-  }
 
   function popupOpenFromClick(event) {
     popupOpen(event.currentTarget.dataset.name);
-  }
-
-  function popupOpen(name) {
-    var i;
-    for (i=0; i<popupInners.length; i++) {
-      popupInners[i].classList.add("popup__inner--hide");
-    }
-    document.getElementById("popup-inner-" + name).classList.remove("popup__inner--hide");
-
-    popup.classList.add("popup--show");
-  }
-
-  function popupClose() {
-    popup.classList.remove("popup--show");
-  }
-
-  function popupContentsClick(event) {
-    event.stopPropagation();
   }
 
   function decimalToSexagesimal(decimal, type) {
@@ -400,25 +277,11 @@
   document.addEventListener("mozfullscreenchange", onFullscreenChange);
   document.addEventListener("MSFullscreenChange", onFullscreenChange);
 
-  btnLockOrientation.addEventListener("click", toggleOrientationLock);
-  btnNightmode.addEventListener("click", toggleNightmode);
-  btnMap.addEventListener("click", openMap);
-
-  var i;
-  for (i=0; i<btnsPopup.length; i++) {
-    btnsPopup[i].addEventListener("click", popupOpenFromClick);
-  }
-
-  popup.addEventListener("click", popupClose);
-  popupContents.addEventListener("click", popupContentsClick);
-
   navigator.geolocation.watchPosition(locationUpdate, locationUpdateFail, {
     enableHighAccuracy: false,
     maximumAge: 30000,
     timeout: 27000
   });
 
-  setNightmode(false);
-  checkLockable();
 
 }());
