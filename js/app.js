@@ -28,9 +28,6 @@
 
   // switches keeping track of our current app state
   var isOrientationLockable = false;
-  var isOrientationLocked = false;
-  var isNightMode = false;
-
 
   // the orientation of the device on app load
   var defaultOrientation;
@@ -151,7 +148,7 @@
       // what adjustment we have to add to rotation to allow for current device orientation
       var adjustment = 0;
       if (defaultOrientation === "landscape") {
-        adjustment -= 90;
+        //adjustment -= 90;
       }
 
       if (typeof orientation !== "undefined") {
@@ -233,32 +230,6 @@
 
   function locationUpdateFail(error) {
     console.log("location fail: ", error);
-  }
-
-
-  function popupOpenFromClick(event) {
-    popupOpen(event.currentTarget.dataset.name);
-  }
-
-  function decimalToSexagesimal(decimal, type) {
-    var degrees = decimal | 0;
-    var fraction = Math.abs(decimal - degrees);
-    var minutes = (fraction * 60) | 0;
-    var seconds = (fraction * 3600 - minutes * 60) | 0;
-
-    var direction = "";
-    var positive = degrees > 0;
-    degrees = Math.abs(degrees);
-    switch (type) {
-      case "lat":
-        direction = positive ? "N" : "S";
-        break;
-      case "lng":
-        direction = positive ? "E" : "W";
-        break;
-    }
-
-    return degrees + "° " + minutes + "' " + seconds + "\" " + direction;
   }
 
   if (screen.width > screen.height) {
