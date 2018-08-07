@@ -66,6 +66,8 @@
                                 device has been turned 180deg from normal
     */
 
+    alert(orientation)
+
     // iOS
     if (orientation == "undefined"){
       var rotation = window.orientation
@@ -93,6 +95,8 @@
         break;
       }
     }
+
+    alert(orientation)
 
     return orientation;
   }
