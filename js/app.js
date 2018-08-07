@@ -45,12 +45,12 @@
     }
 
     /*
-      'portait-primary':      for (screen width < screen height, e.g. phone, phablet, small tablet)
+      'portrait-primary':      for (screen width < screen height, e.g. phone, phablet, small tablet)
                                 device is in 'normal' orientation
                               for (screen width > screen height, e.g. large tablet, laptop)
                                 device has been turned 90deg clockwise from normal
 
-      'portait-secondary':    for (screen width < screen height)
+      'portrait-secondary':    for (screen width < screen height)
                                 device has been turned 180deg from normal
                               for (screen width > screen height)
                                 device has been turned 90deg anti-clockwise (or 270deg clockwise) from normal
@@ -65,6 +65,34 @@
                               for (screen width > screen height)
                                 device has been turned 180deg from normal
     */
+
+    // iOS
+    if (orientation == "undefined"){
+      var rotation = window.orientation
+      switch(rotation) {
+        case 0:  
+        // Portrait
+        orientation = "portrait-primary"
+        break; 
+        
+    case 180:  
+        // Portrait (Upside-down)
+        orientation = "portrait-secondary"
+        break; 
+  
+    case -90:  
+    
+        // Landscape (Clockwise)
+        orientation = "landscape-primary"
+        break;  
+  
+    case 90:  
+    
+        // Landscape  (Counterclockwise)
+        orientation = "landscape-secondary"
+        break;
+      }
+    }
 
     return orientation;
   }
@@ -198,9 +226,6 @@
     } else {
       lockOrientationRequest(false);
     }
-
-    // Add
-    onHeadingChange();
   }
 
   function lockOrientationRequest(doLock) {
