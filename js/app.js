@@ -137,7 +137,7 @@
     var orientation = getBrowserOrientation();
 
     if (typeof heading !== "undefined" && heading !== null) { // && typeof orientation !== "undefined") {
-      // we have a browser that reports device heading and orientation
+      // we have a browser that reports degit commit -m "fix bugs"vice heading and orientation
 
 
       if (debug) {
@@ -154,17 +154,17 @@
       if (typeof orientation !== "undefined") {
         var currentOrientation = orientation.split("-");
 
-        if (defaultOrientation !== currentOrientation[0]) {
-          if (defaultOrientation === "landscape") {
-            adjustment -= 270;
-          } else {
-            adjustment -= 90;
-          }
-        }
+        // if (defaultOrientation !== currentOrientation[0]) {
+        //   if (defaultOrientation === "landscape") {
+        //     adjustment -= 270;
+        //   } else {
+        //     adjustment -= 90;
+        //   }
+        // }
 
-        if (currentOrientation[1] === "secondary") {
-          adjustment -= 180;
-        }
+        // if (currentOrientation[1] === "secondary") {
+        //   adjustment -= 180;
+        // }
       }
 
       positionCurrent.hng = heading + adjustment;
