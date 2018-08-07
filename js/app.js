@@ -71,8 +71,7 @@
     // iOS
     if (orientation === undefined){
       var rotation = window.orientation
-      alert(rotation)
-
+      
       switch(rotation) {
         case 0:  
         // Portrait
@@ -97,7 +96,7 @@
         break;
       }
     }
-    
+
     return orientation;
   }
 
