@@ -78,23 +78,24 @@
         orientation = "portrait-primary"
         break; 
         
-    case 180:  
-        // Portrait (Upside-down)
-        orientation = "portrait-secondary"
-        break; 
+        case 180:  
+          // Portrait (Upside-down)
+          orientation = "portrait-secondary"
+          break; 
   
-    case -90:  
-    
-        // Landscape (Clockwise)
-        orientation = "landscape-primary"
-        break;  
+        case -90:  
+          // Landscape (Clockwise)
+          orientation = "landscape-primary"
+          break;  
   
-    case 90:  
-    
-        // Landscape  (Counterclockwise)
-        orientation = "landscape-secondary"
-        break;
+        case 90:  
+          // Landscape  (Counterclockwise)
+          orientation = "landscape-secondary"
+          break;
       }
+
+      alert(orientation)
+      
     }
 
     return orientation;
