@@ -226,6 +226,8 @@
         screen.orientation.lock(getBrowserOrientation()).then(function () {
         }).catch(function () {
         });
+      } else if(window.orientation) {
+        window.orientation.lock(getBrowserOrientation()).then(function () {}).catch(function () {});
       }
     } else {
       lockOrientationRequest(false);
