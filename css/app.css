@@ -25,11 +25,8 @@ h1 {
 html {
   font-family: Muli, sans-serif;
   font-size: 16px;
-  background-color: white;
-  color: white;
-
-  background: white url(../images/bg.jpg) 50% 50% no-repeat;
-  background-size: cover;
+  background-color: black;
+  color: black;
   height: 100%;
 }
 
