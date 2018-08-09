@@ -45,12 +45,12 @@
     }
 
     /*
-      'portait-primary':      for (screen width < screen height, e.g. phone, phablet, small tablet)
+      'portrait-primary':      for (screen width < screen height, e.g. phone, phablet, small tablet)
                                 device is in 'normal' orientation
                               for (screen width > screen height, e.g. large tablet, laptop)
                                 device has been turned 90deg clockwise from normal
 
-      'portait-secondary':    for (screen width < screen height)
+      'portrait-secondary':    for (screen width < screen height)
                                 device has been turned 180deg from normal
                               for (screen width > screen height)
                                 device has been turned 90deg anti-clockwise (or 270deg clockwise) from normal
@@ -65,6 +65,35 @@
                               for (screen width > screen height)
                                 device has been turned 180deg from normal
     */
+
+    
+
+    // iOS
+    if (orientation === undefined){
+      var rotation = window.orientation
+      
+      switch(rotation) {
+        case 0:  
+        // Portrait
+        orientation = "portrait-primary"
+        break; 
+        
+        case 180:  
+          // Portrait (Upside-down)
+          orientation = "portrait-secondary"
+          break; 
+  
+        case -90:  
+          // Landscape (Clockwise)
+          orientation = "landscape-primary"
+          break;  
+  
+        case 90:  
+          // Landscape  (Counterclockwise)
+          orientation = "landscape-secondary"
+          break;
+      }   
+    }
 
     return orientation;
   }
@@ -82,6 +111,35 @@
       screen.msUnlockOrientation();
     }
   }
+
+
+  // browser agnostic document.fullscreenElement
+  function getBrowserFullscreenElement() {
+    if (typeof document.fullscreenElement !== "undefined") {
+      return document.fullscreenElement;
+    } else if (typeof document.webkitFullscreenElement !== "undefined") {
+      return document.webkitFullscreenElement;
+    } else if (typeof document.mozFullScreenElement !== "undefined") {
+      return document.mozFullScreenElement;
+    } else if (typeof document.msFullscreenElement !== "undefined") {
+      return document.msFullscreenElement;
+    }
+  }
+
+
+  // browser agnostic document.documentElement.requestFullscreen
+  function browserRequestFullscreen() {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    }
+  }
+
 
   // browser agnostic document.documentElement.exitFullscreen
   function browserExitFullscreen() {
@@ -108,7 +166,7 @@
     var orientation = getBrowserOrientation();
 
     if (typeof heading !== "undefined" && heading !== null) { // && typeof orientation !== "undefined") {
-      // we have a browser that reports device heading and orientation
+      // we have a browser that reports degit commit -m "fix bugs"vice heading and orientation
 
 
       if (debug) {
@@ -165,6 +223,8 @@
         screen.orientation.lock(getBrowserOrientation()).then(function () {
         }).catch(function () {
         });
+      } else if(window.orientation) {
+        window.orientation.lock(getBrowserOrientation()).then(function () {}).catch(function () {});
       }
     } else {
       lockOrientationRequest(false);
@@ -203,32 +263,6 @@
     console.log("location fail: ", error);
   }
 
-
-  function popupOpenFromClick(event) {
-    popupOpen(event.currentTarget.dataset.name);
-  }
-
-  function decimalToSexagesimal(decimal, type) {
-    var degrees = decimal | 0;
-    var fraction = Math.abs(decimal - degrees);
-    var minutes = (fraction * 60) | 0;
-    var seconds = (fraction * 3600 - minutes * 60) | 0;
-
-    var direction = "";
-    var positive = degrees > 0;
-    degrees = Math.abs(degrees);
-    switch (type) {
-      case "lat":
-        direction = positive ? "N" : "S";
-        break;
-      case "lng":
-        direction = positive ? "E" : "W";
-        break;
-    }
-
-    return degrees + "° " + minutes + "' " + seconds + "\" " + direction;
-  }
-
   if (screen.width > screen.height) {
     defaultOrientation = "landscape";
   } else {
@@ -244,6 +278,7 @@
   document.addEventListener("webkitfullscreenchange", onFullscreenChange);
   document.addEventListener("mozfullscreenchange", onFullscreenChange);
   document.addEventListener("MSFullscreenChange", onFullscreenChange);
+  window.addEventListener('orientationchange', onFullscreenChange);
 
   navigator.geolocation.watchPosition(locationUpdate, locationUpdateFail, {
     enableHighAccuracy: false,
